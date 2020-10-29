@@ -15,7 +15,7 @@ import java.util.Random;
 import javax.swing.JPanel;
 
 public class PointPanel extends JPanel implements MouseListener {
-
+	public boolean showXY = false;
 	ArrayList<Point> points = new ArrayList<>();
 
 	private void doDrawing(Graphics g) {
@@ -24,28 +24,13 @@ public class PointPanel extends JPanel implements MouseListener {
 
 		g2d.setPaint(Color.BLUE);
 
-//		int w = getWidth();
-//		int h = getHeight();
-//
-//		Random r = new Random();
-//
-//		for (int i = 0; i < 2000; i++) {
-//
-//			int x = Math.abs(r.nextInt()) % w;
-//			int y = Math.abs(r.nextInt()) % h;
-//			g2d.drawLine(x, y, x, y);
-//			
-//		}
-//		
-//		
-
 		for (Point point : points) {
-			g2d.fillOval((int)point.getX(), (int)point.getY(), 5, 5);
+			g2d.fillOval((int) point.getX(), (int) point.getY(), 5, 5);
+			if (showXY == true) {
+				g2d.drawString("(" + point.x + "," + point.y + ")", (point.x), (point.y) + 20);
+			}
 		}
-		
-		
-		
-		
+
 	}
 
 	@Override

@@ -1,15 +1,20 @@
 package org.bihe.main;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Checkbox;
+
 import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.JLabel;
+import org.bihe.main.PointPanel;
 
 public class mainPanel {
 
@@ -62,16 +67,12 @@ public class mainPanel {
 		rdbtnGrahamsScan.setBounds(419, 102, 123, 23);
 		panel.add(rdbtnGrahamsScan);
 
-		JCheckBox chckbxShowX = new JCheckBox("Show X & Y");
-		chckbxShowX.setBounds(419, 221, 102, 23);
-		panel.add(chckbxShowX);
-
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("Quick Hull");
 		rdbtnNewRadioButton.setBounds(419, 67, 99, 23);
 		panel.add(rdbtnNewRadioButton);
 
 		JButton btnApply = new JButton("Apply");
-		btnApply.setBounds(429, 270, 102, 29);
+		btnApply.setBounds(429, 146, 102, 29);
 		panel.add(btnApply);
 
 		PointPanel panel_1 = new PointPanel();
@@ -79,7 +80,20 @@ public class mainPanel {
 		panel_1.setBounds(16, 19, 391, 362);
 		panel_1.addMouseListener(panel_1);
 		panel.add(panel_1);
-		
+
+		JCheckBox chckbxShowX = new JCheckBox("Show X & Y");
+		chckbxShowX.setBounds(419, 358, 102, 23);
+		panel.add(chckbxShowX);
+		chckbxShowX.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				panel_1.showXY = chckbxShowX.isSelected();
+				panel_1.repaint();
+
+			}
+		});
 
 		JLabel lblNewLabel = new JLabel("Click on the square above to draw a point");
 		lblNewLabel.setForeground(new Color(119, 136, 153));
