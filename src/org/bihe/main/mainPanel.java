@@ -61,14 +61,17 @@ public class mainPanel {
 
 		JRadioButton rdbtnBlindSearch = new JRadioButton("Blind Search ");
 		rdbtnBlindSearch.setBounds(419, 32, 112, 23);
+		rdbtnBlindSearch.setBackground(new Color(191, 230, 244));
 		panel.add(rdbtnBlindSearch);
 
 		JRadioButton rdbtnGrahamsScan = new JRadioButton("Graham Scan");
 		rdbtnGrahamsScan.setBounds(419, 102, 123, 23);
+		rdbtnGrahamsScan.setBackground(new Color(191, 230, 244));
 		panel.add(rdbtnGrahamsScan);
 
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("Quick Hull");
 		rdbtnNewRadioButton.setBounds(419, 67, 99, 23);
+		rdbtnNewRadioButton.setBackground(new Color(191, 230, 244));
 		panel.add(rdbtnNewRadioButton);
 
 		JButton btnApply = new JButton("Apply");
@@ -83,6 +86,7 @@ public class mainPanel {
 
 		JCheckBox chckbxShowX = new JCheckBox("Show X & Y");
 		chckbxShowX.setBounds(419, 358, 102, 23);
+		chckbxShowX.setBackground(new Color(191, 230, 244));
 		panel.add(chckbxShowX);
 		chckbxShowX.addActionListener(new ActionListener() {
 
@@ -97,7 +101,7 @@ public class mainPanel {
 
 		JLabel lblNewLabel = new JLabel("Click on the square above to draw a point");
 		lblNewLabel.setForeground(new Color(119, 136, 153));
-		lblNewLabel.setBounds(75, 385, 268, 16);
+		lblNewLabel.setBounds(75, 382, 268, 16);
 		panel.add(lblNewLabel);
 
 	}
