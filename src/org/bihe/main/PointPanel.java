@@ -95,9 +95,9 @@ public class PointPanel extends JPanel implements MouseListener {
 	
 	public void sortByAngles(ArrayList<Point> convexPoints) {
 		Collections.sort(convexPoints, Comparator.comparing(Point :: getY).reversed().thenComparing(Point ::getX));
-		
+		Point p = (Point) convexPoints.get(0).clone();
 		Collections.sort(convexPoints, Comparator.comparing(
-				x -> Math.atan2(x.getX() - convexPoints.get(0).getX(), x.getY() - convexPoints.get(0).getY())));
+				x -> Math.atan2(x.getX() - p.getX(), x.getY() - p.getY())));
 	
 	}
 
