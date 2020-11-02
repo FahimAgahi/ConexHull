@@ -102,7 +102,30 @@ public class PointPanel extends JPanel implements MouseListener {
 				x -> Math.atan2(x.getY() - p.getY(), x.getX() - p.getX())));
 	
 	}
+	public void drawConvexWithGrahamScan(){
+		ArrayList<Point> clonedPoints = (ArrayList<Point>) points.clone();
+		sortGrahamScan(clonedPoints);
+	}
+	private void sortGrahamScan(ArrayList<Point> points) {
+		Collections.sort(points, Comparator.comparing(Point :: getY).reversed().thenComparing(Point ::getX));
+		
+		Point startPoint = (Point) points.get(0).clone();
+		points.remove(0);
+		
+		Collections.sort(points, 
+				Comparator.comparing(x -> Math.toDegrees(Math.atan2(x.getY() - startPoint.getY(), x.getX() - startPoint.getX()))));
+		
+		Collections.reverse(points);
+		
+		Graphics g = this.getGraphics();
 
+		for (int i = 0; i < points.size(); i++) {
+			((Graphics2D) g).setStroke(new BasicStroke(3));
+			Point p1 = points.get(i);
+			g.drawString(i+"", (int) p1.getX(), (int) p1.getY());
+		}
+		
+	}
 	@Override
 	public void paintComponent(Graphics g) {
 

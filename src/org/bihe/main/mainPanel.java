@@ -113,7 +113,7 @@ public class mainPanel {
 				if(rdbtnBlindSearch.isSelected()) {
 					panel_1.drawConvexWithBlindSearch();
 				}else if(rdbtnGrahamsScan.isSelected()) {
-					//Grahams Scan
+					panel_1.drawConvexWithGrahamScan();
 				}else if(rdbtnNewRadioButton.isSelected()) {
 					//Quick hull
 				}
