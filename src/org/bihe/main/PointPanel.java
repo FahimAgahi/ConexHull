@@ -33,7 +33,7 @@ public class PointPanel extends JPanel implements MouseListener {
 
 		for (Point point : points) {
 			g2d.fillOval((int) point.getX(), (int) point.getY(), 5, 5);
-			if (showXY) {
+			if (showXY == true) {
 				g2d.drawString("(" + point.x + "," + point.y + ")", (point.x), (point.y) + 20);
 			}
 		}
@@ -62,7 +62,7 @@ public class PointPanel extends JPanel implements MouseListener {
 		g2d.setPaint(Color.RED);
 		for (Point point : convexPoints) {
 			g2d.fillOval((int) point.getX(), (int) point.getY(), 5, 5);
-			if (showXY) {
+			if (showXY == true) {
 				g2d.drawString("(" + point.x + "," + point.y + ")", (point.x), (point.y) + 20);
 			}
 		}
@@ -126,7 +126,7 @@ public class PointPanel extends JPanel implements MouseListener {
 			if(i == clonedPoints.size())
 				break;
 			
-			if(!lastTimeRemoved)
+			if(lastTimeRemoved == false)
 				linkedListPoints.add(clonedPoints.get(i));
 
 			if (linkedListPoints.size() >= 3) {
@@ -166,7 +166,6 @@ public class PointPanel extends JPanel implements MouseListener {
 
 		Point min = points.get(0);
 		Point max = points.get(points.size()-1);
-
 		points.remove(min);
 		points.remove(max);
 
@@ -182,10 +181,8 @@ public class PointPanel extends JPanel implements MouseListener {
 		result.addAll(findHull(min, max, S1));
 		result.add(max);
 		result.addAll(findHull(max, min, S2));
-
 		
 		//draw lines
-
 		drawConvexHull(result);
 	}
 	
@@ -194,7 +191,7 @@ public class PointPanel extends JPanel implements MouseListener {
 	}
 	
 	//find hull
-	private ArrayList<Point> findHull (Point a, Point b, ArrayList<Point> points) {
+	private ArrayList<Point>  findHull (Point a, Point b, ArrayList<Point> points) {
 		ArrayList<Point> result = new ArrayList<>();
 		ArrayList<Point> S1 = new ArrayList<>();
 		ArrayList<Point> S2 = new ArrayList<>();
@@ -208,15 +205,14 @@ public class PointPanel extends JPanel implements MouseListener {
 	    double furthestdis=0;
 		
 	    //calculate distance
-		for(int c=0;c<points.size();c++) {
-	        if(calculate_distance(a.x, a.y, b.x, b.y,points.get(c).x,points.get(c).y)>furthestdis){
+		for(int c=0;c<points.size();c++){
+	        if(calculate_distance(a.x,a.y,b.x,b.y,points.get(c).x,points.get(c).y)>furthestdis){
 	            furthestid = c;
-	            furthestdis = calculate_distance(a.x, a.y, b.x, b.y,points.get(c).x,points.get(c).y);
+	            furthestdis = calculate_distance(a.x,a.y,b.x,b.y,points.get(c).x,points.get(c).y);
 	        }
 	    }
 		Point c = points.get(furthestid);
 		points.remove(c);
-			
 		//inside points
 		points.removeIf(p -> isInside(p.x, p.y, a.x, a.y, b.x, b.y, c.x, c.y));
 
@@ -227,25 +223,22 @@ public class PointPanel extends JPanel implements MouseListener {
 				S2.add(p);
 			}
 		}
-
-//		System.out.print(a + " ,");
-//		System.out.println(b);
-//		System.out.println(c);
+		
 		result.addAll(findHull(a, c, S1));
 		result.add(c);
 		result.addAll(findHull(c, b, S2));
 		return result;
 	}
 	
-	public static double calculate_distance (int x1,int y1,int x2 ,int y2,int x0 ,int y0){
-        return Math.abs((y2-y1) * x0 - (x2-x1) * y0 +x2*y1 - y2*x1) / Math.sqrt(Math.pow(y2-y1, 2) + Math.pow(x2-x1, 2));
+	public static double calculate_distance (int x1,int y1,int x2 ,int y2, int x0 ,int y0){
+        return Math.abs((y2-y1) * x0 - (x2-x1) * y0 + x2*y1 - y2*x1) / Math.sqrt(Math.pow(y2-y1, 2) + Math.pow(x2-x1, 2));
 	}
 	
 	public boolean isInside( int x, int y, int x1, int y1, int x2, int y2, int x3, int y3 ) {
 		  float p1 = (x-x1)*(y3-y1) - (x3-x1)*(y-y1), 
 		    p2 = (x-x2)*(y1-y2) - (x1-x2)*(y-y2), 
 		    p3 = (x-x3)*(y2-y3) - (x2-x3)*(y-y3);
-		  return (p1>=0 && p2>=0  && p3>0) || (p1<=0 && p2<=0 && p3<=0);
+		  return (p1>0 && p2>0  && p3>0) || (p1<0 && p2<0 && p3<0);
 	}
 	
 	private void sortGrahamScan(ArrayList<Point> points) {
