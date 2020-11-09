@@ -164,15 +164,101 @@ public class PointPanel extends JPanel implements MouseListener {
 
 		// sort
 		ArrayList<Point> points = (ArrayList<Point>) this.points.clone();
-		points.sort(Comparator.comparing(Point::getX));
+
 		ArrayList<Point> result = new ArrayList<>();
 		ArrayList<Point> S1 = new ArrayList<>();
 		ArrayList<Point> S2 = new ArrayList<>();
+
+
+
+		ArrayList<Point> mins = new ArrayList<>();
+		mins.add(points.get(0));
+
+		ArrayList<Point> maxs = new ArrayList<>();
+		maxs.add(points.get(0));
+
+		Point minsUpperPoint = null;
+		Point minsLowerPoint = null;
+
+		Point maxsUpperPoint = null;
+		Point maxsLowerPoint = null;
+
+		for(Point p : points){
+			if(p.getX() < mins.get(0).getX()){
+				mins.clear();
+				mins.add(p);
+
+				if(minsUpperPoint == null){
+					minsUpperPoint = p;
+				}
+				if(minsLowerPoint == null){
+					minsLowerPoint = p;
+				}
+
+				if(p.getY() > minsLowerPoint.getY()){
+					minsLowerPoint = p;
+				}
+				if(p.getY() < minsUpperPoint.getY()){
+					minsUpperPoint = p;
+				}
+
+			}else if(p.getX() == mins.get(0).getX()){
+				mins.add(p);
+				if(minsUpperPoint == null){
+					minsUpperPoint = p;
+				}
+				if(minsLowerPoint == null){
+					minsLowerPoint = p;
+				}
+
+				if(p.getY() > minsLowerPoint.getY()){
+					minsLowerPoint = p;
+				}
+				if(p.getY() < minsUpperPoint.getY()){
+					minsUpperPoint = p;
+				}
+			}
+
+			if(p.getX() > maxs.get(0).getX()){
+				maxs.clear();
+				maxs.add(p);
+				if(minsUpperPoint == null){
+					minsUpperPoint = p;
+				}
+				if(minsLowerPoint == null){
+					minsLowerPoint = p;
+				}
+
+				if(p.getY() > minsLowerPoint.getY()){
+					minsLowerPoint = p;
+				}
+				if(p.getY() < minsUpperPoint.getY()){
+					minsUpperPoint = p;
+				}
+			}else if(p.getX() == maxs.get(0).getX()){
+				maxs.add(p);
+				if(maxsUpperPoint == null){
+					maxsUpperPoint = p;
+				}
+				if(maxsLowerPoint == null){
+					maxsLowerPoint = p;
+				}
+
+				if(p.getY() > maxsLowerPoint.getY()){
+					maxsLowerPoint = p;
+				}
+				if(p.getY() < maxsUpperPoint.getY()){
+					maxsUpperPoint = p;
+				}
+			}
+		}
+
 
 		Point min = points.get(0);
 		Point max = points.get(points.size() - 1);
 		points.remove(min);
 		points.remove(max);
+
 
 		for (Point p : points) {
 			if (isRight(min, max, p)) {
