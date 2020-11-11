@@ -22,374 +22,316 @@ import javax.swing.JPanel;
 import org.w3c.dom.Node;
 
 public class PointPanel extends JPanel implements MouseListener {
-	public boolean showXY = false;
-	ArrayList<Point> points = new ArrayList<>();
+    public boolean showXY = false;
+    ArrayList<Point> points = new ArrayList<>();
 
-	private void doDrawing(Graphics g) {
+    private void doDrawing(Graphics g) {
 
-		Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g;
 
-		g2d.setPaint(Color.BLUE);
+        g2d.setPaint(Color.BLUE);
 
-		for (Point point : points) {
-			g2d.fillOval((int) point.getX(), (int) point.getY(), 5, 5);
-			if (showXY) {
-				g2d.drawString("(" + point.x + "," + point.y + ")", (point.x), (point.y) + 20);
-			}
-		}
-	}
+        for (Point point : points) {
+            g2d.fillOval((int) point.getX(), (int) point.getY(), 5, 5);
+            if (showXY) {
+                g2d.drawString("(" + point.x + "," + point.y + ")", (point.x), (point.y) + 20);
+            }
+        }
+    }
 
-	public void drawConvexWithBlindSearch() {
-		ArrayList<Point> innerPoints = new ArrayList<>();
-		for (Point q : points) {
-			for (Point p1 : points) {
-				for (Point p2 : points) {
-					for (Point p3 : points) {
-						if (angleTurn(p1, p2, q) < 0 && angleTurn(p2, p3, q) < 0 && angleTurn(p3, p1, q) < 0) {
-							innerPoints.add(q);
-						}
-					}
-				}
-			}
+    public void drawConvexWithBlindSearch() {
+        ArrayList<Point> innerPoints = new ArrayList<>();
+        for (Point q : points) {
+            for (Point p1 : points) {
+                for (Point p2 : points) {
+                    for (Point p3 : points) {
+                        if (angleTurn(p1, p2, q) < 0 && angleTurn(p2, p3, q) < 0 && angleTurn(p3, p1, q) < 0) {
+                            innerPoints.add(q);
+                        }
+                    }
+                }
+            }
 
-		}
+        }
 
-		Graphics2D g2d = (Graphics2D) this.getGraphics();
-		ArrayList<Point> convexPoints = new ArrayList();
-		convexPoints.addAll(points);
-		convexPoints.removeAll(innerPoints);
+        Graphics2D g2d = (Graphics2D) this.getGraphics();
+        ArrayList<Point> convexPoints = new ArrayList();
+        convexPoints.addAll(points);
+        convexPoints.removeAll(innerPoints);
 
-		g2d.setPaint(Color.RED);
-		for (Point point : convexPoints) {
-			g2d.fillOval((int) point.getX(), (int) point.getY(), 5, 5);
-			if (showXY) {
-				g2d.drawString("(" + point.x + "," + point.y + ")", (point.x), (point.y) + 20);
-			}
-		}
-		// sort
-		sortByAngles(convexPoints);
-		drawConvexHull(convexPoints);
+        g2d.setPaint(Color.RED);
+        for (Point point : convexPoints) {
+            g2d.fillOval((int) point.getX(), (int) point.getY(), 5, 5);
+            if (showXY) {
+                g2d.drawString("(" + point.x + "," + point.y + ")", (point.x), (point.y) + 20);
+            }
+        }
+        // sort
+        sortByAngles(convexPoints);
+        drawConvexHull(convexPoints);
 
-	}
+    }
 
-	public void drawConvexHull(ArrayList<Point> extrems) {
-		Graphics g = this.getGraphics();
-		g.setColor(Color.RED);
-		for (Point p : extrems) {
-			g.fillOval(p.x - 5, p.y - 5, 10, 10);
-		}
+    public void drawConvexHull(ArrayList<Point> extrems) {
+        Graphics g = this.getGraphics();
+        g.setColor(Color.RED);
+        for (Point p : extrems) {
+            g.fillOval(p.x - 5, p.y - 5, 10, 10);
+        }
 
-		for (int i = 0; i < extrems.size() - 1; i++) {
-			((Graphics2D) g).setStroke(new BasicStroke(3));
-			Point p1 = extrems.get(i);
-			Point p2 = extrems.get(i + 1);
-			g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(), (int) p2.getY());
-		}
-		Point p1 = extrems.get(extrems.size() - 1);
-		Point p2 = extrems.get(0);
-		g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(), (int) p2.getY());
-	}
+        for (int i = 0; i < extrems.size() - 1; i++) {
+            ((Graphics2D) g).setStroke(new BasicStroke(3));
+            Point p1 = extrems.get(i);
+            Point p2 = extrems.get(i + 1);
+            g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(), (int) p2.getY());
+        }
+        Point p1 = extrems.get(extrems.size() - 1);
+        Point p2 = extrems.get(0);
+        g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(), (int) p2.getY());
+    }
 
-	public double angleTurn(Point p1, Point p2, Point p3) {
-		return (double) (p2.getX() - p1.getX()) * (p3.getY() - p1.getY())
-				- (p3.getX() - p1.getX()) * (p2.getY() - p1.getY());
+    public double angleTurn(Point p1, Point p2, Point p3) {
+        return (double) (p2.getX() - p1.getX()) * (p3.getY() - p1.getY())
+                - (p3.getX() - p1.getX()) * (p2.getY() - p1.getY());
 
-	}
+    }
 
-	public void sortByAngles(ArrayList<Point> convexPoints) {
-		convexPoints.sort(Comparator.comparing(Point::getY).reversed().thenComparing(Point::getX));
+    public void sortByAngles(ArrayList<Point> convexPoints) {
+        convexPoints.sort(Comparator.comparing(Point::getY).reversed().thenComparing(Point::getX));
 
-		Point p = (Point) convexPoints.get(0).clone();
+        Point p = (Point) convexPoints.get(0).clone();
 
-		convexPoints.sort(Comparator.comparing(x -> Math.atan2(x.getY() - p.getY(), x.getX() - p.getX())));
+        convexPoints.sort(Comparator.comparing(x -> Math.atan2(x.getY() - p.getY(), x.getX() - p.getX())));
 
-	}
+    }
 
-	public void drawConvexWithGrahamScan() {
+    public void drawConvexWithGrahamScan() {
 
-		ArrayList<Point> clonedPoints = (ArrayList<Point>) points.clone();
+        ArrayList<Point> clonedPoints = (ArrayList<Point>) points.clone();
 
-		sortGrahamScan(clonedPoints);
+        sortGrahamScan(clonedPoints);
 
-		Point startPoint = (Point) clonedPoints.get(clonedPoints.size() - 1);
+        Point startPoint = (Point) clonedPoints.get(clonedPoints.size() - 1);
 
-		clonedPoints.remove(clonedPoints.size() - 1);
+        clonedPoints.remove(clonedPoints.size() - 1);
 
-		LinkedList linkedListPoints = new LinkedList();
-		// LinkedList<Point> linkedListPoints = new LinkedList<>();
+        LinkedList linkedListPoints = new LinkedList();
+        // LinkedList<Point> linkedListPoints = new LinkedList<>();
 
-		linkedListPoints.insert(startPoint, startPoint);
-		int i = 0;
-		boolean lastTimeRemoved = false;
-		while (true) {
+        linkedListPoints.insert(startPoint, startPoint);
+        int i = 0;
+        boolean lastTimeRemoved = false;
+        while (true) {
 
-			if (i == clonedPoints.size())
-				break;
+            if (i == clonedPoints.size())
+                break;
 
-			if (!lastTimeRemoved)
-				linkedListPoints.insert(clonedPoints.get(i), clonedPoints.get(i));
+            if (!lastTimeRemoved)
+                linkedListPoints.insert(clonedPoints.get(i), clonedPoints.get(i));
 
-			if (linkedListPoints.size() >= 3) {
+            if (linkedListPoints.size() >= 3) {
 //				int size = linkedListPoints.size();
 
-				Point first = linkedListPoints.tail.previous.previous.item.data;
-				Point center = linkedListPoints.tail.previous.item.data;
-				Point last = linkedListPoints.tail.item.data;
+                Point first = linkedListPoints.tail.previous.previous.item.data;
+                Point center = linkedListPoints.tail.previous.item.data;
+                Point last = linkedListPoints.tail.item.data;
 
-				double degree = angleTurn(first, last, center);
+                double degree = angleTurn(first, last, center);
 
-				if (degree < 0) {
-					linkedListPoints.delete(center);
-					lastTimeRemoved = true;
-				} else {
-					lastTimeRemoved = false;
-					i++;
-				}
-			}
-		}
+                if (degree < 0) {
+                    linkedListPoints.delete(center);
+                    lastTimeRemoved = true;
+                } else {
+                    lastTimeRemoved = false;
+                    i++;
+                }
+            }
+        }
 
-		ArrayList<Point> p = new ArrayList<>();
+        ArrayList<Point> p = new ArrayList<>();
 
-		LinkedList.Node pointer = linkedListPoints.head;
-		while (pointer != null) {
-			p.add(pointer.item.data);
-			pointer = pointer.next;
-		}
+        LinkedList.Node pointer = linkedListPoints.head;
+        while (pointer != null) {
+            p.add(pointer.item.data);
+            pointer = pointer.next;
+        }
 
-		drawConvexHull(p);
+        drawConvexHull(p);
 
-	}
+    }
 
-	public void quikHull() {
+    public void quikHull() {
 
-		// sort
-		ArrayList<Point> points = (ArrayList<Point>) this.points.clone();
-
-		ArrayList<Point> result = new ArrayList<>();
-		ArrayList<Point> S1 = new ArrayList<>();
-		ArrayList<Point> S2 = new ArrayList<>();
-
-
-
-		ArrayList<Point> mins = new ArrayList<>();
-		mins.add(points.get(0));
-
-		ArrayList<Point> maxs = new ArrayList<>();
-		maxs.add(points.get(0));
-
-		Point minsUpperPoint = null;
-		Point minsLowerPoint = null;
-
-		Point maxsUpperPoint = null;
-		Point maxsLowerPoint = null;
-
-		for(Point p : points){
-			if(p.getX() < mins.get(0).getX()){
-				mins.clear();
-				mins.add(p);
-
-				if(minsUpperPoint == null){
-					minsUpperPoint = p;
-				}
-				if(minsLowerPoint == null){
-					minsLowerPoint = p;
-				}
-
-				if(p.getY() > minsLowerPoint.getY()){
-					minsLowerPoint = p;
-				}
-				if(p.getY() < minsUpperPoint.getY()){
-					minsUpperPoint = p;
-				}
-
-			}else if(p.getX() == mins.get(0).getX()){
-				mins.add(p);
-				if(minsUpperPoint == null){
-					minsUpperPoint = p;
-				}
-				if(minsLowerPoint == null){
-					minsLowerPoint = p;
-				}
-
-				if(p.getY() > minsLowerPoint.getY()){
-					minsLowerPoint = p;
-				}
-				if(p.getY() < minsUpperPoint.getY()){
-					minsUpperPoint = p;
-				}
-			}
-
-			if(p.getX() > maxs.get(0).getX()){
-				maxs.clear();
-				maxs.add(p);
-				if(minsUpperPoint == null){
-					minsUpperPoint = p;
-				}
-				if(minsLowerPoint == null){
-					minsLowerPoint = p;
-				}
-
-				if(p.getY() > minsLowerPoint.getY()){
-					minsLowerPoint = p;
-				}
-				if(p.getY() < minsUpperPoint.getY()){
-					minsUpperPoint = p;
-				}
-			}else if(p.getX() == maxs.get(0).getX()){
-				maxs.add(p);
-				if(maxsUpperPoint == null){
-					maxsUpperPoint = p;
-				}
-				if(maxsLowerPoint == null){
-					maxsLowerPoint = p;
-				}
-
-				if(p.getY() > maxsLowerPoint.getY()){
-					maxsLowerPoint = p;
-				}
-				if(p.getY() < maxsUpperPoint.getY()){
-					maxsUpperPoint = p;
-				}
-			}
-		}
+        // sort
+        ArrayList<Point> points = (ArrayList<Point>) this.points.clone();
+//		points.sort(Comparator.comparing(Point::getX));
+        ArrayList<Point> result = new ArrayList<>();
+        ArrayList<Point> S1 = new ArrayList<>();
+        ArrayList<Point> S2 = new ArrayList<>();
 
 
-		Point min = points.get(0);
-		Point max = points.get(points.size() - 1);
-		points.remove(min);
-		points.remove(max);
+        ArrayList<Point> mins = new ArrayList<>();
+        mins.add(points.get(0));
+        ArrayList<Point> maxs = new ArrayList<>();
+        maxs.add(points.get(0));
 
 
-		for (Point p : points) {
-			if (isRight(min, max, p)) {
-				S1.add(p);
-			} else {
-				S2.add(p);
-			}
-		}
 
-		result.add(min);
-		result.addAll(findHull(min, max, S1));
-		result.add(max);
-		result.addAll(findHull(max, min, S2));
+        for (Point p : points) {
+            if (!(p.getX() > mins.get(0).getX())) {
+                if (p.getX() < mins.get(0).getX())
+                    mins.clear();
+                mins.add(p);
+            }
 
-		// draw lines
-		drawConvexHull(result);
-	}
+            if (!(p.getX() < maxs.get(0).getX())) {
+                if (p.getX() > maxs.get(0).getX())
+                    maxs.clear();
 
-	public boolean isRight(Point a, Point b, Point c) {
-		return ((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)) > 0;
-	}
+                maxs.add(p);
 
-	// find hull
-	private ArrayList<Point> findHull(Point a, Point b, ArrayList<Point> points) {
-		ArrayList<Point> result = new ArrayList<>();
-		ArrayList<Point> S1 = new ArrayList<>();
-		ArrayList<Point> S2 = new ArrayList<>();
+            }
+        }
 
-		if (points.size() == 0) {
-			return result;
-		}
+        mins.sort(Comparator.comparing(Point::getY));
+        maxs.sort(Comparator.comparing(Point::getY));
 
-		// find center of ab line
-		int furthestid = 0;
-		double furthestdis = 0;
 
-		// calculate distance
-		for (int c = 0; c < points.size(); c++) {
-			if (calculate_distance(a.x, a.y, b.x, b.y, points.get(c).x, points.get(c).y) > furthestdis) {
-				furthestid = c;
-				furthestdis = calculate_distance(a.x, a.y, b.x, b.y, points.get(c).x, points.get(c).y);
-			}
-		}
-		Point c = points.get(furthestid);
-		points.remove(c);
-		// inside points
-		points.removeIf(p -> isInside(p.x, p.y, a.x, a.y, b.x, b.y, c.x, c.y));
+        points.removeAll(mins);
+        points.removeAll(maxs);
 
-		for (Point p : points) {
-			if (isRight(a, c, p)) {
-				S1.add(p);
-			} else {
-				S2.add(p);
-			}
-		}
+        for (Point p : points) {
+            if (isRight(mins.get(0), maxs.get(0), p)) {
+                S1.add(p);
+            }
+            if (isRight(maxs.get(maxs.size() - 1), mins.get(mins.size() - 1), p)) {
+                S2.add(p);
+            }
+        }
 
-		result.addAll(findHull(a, c, S1));
-		result.add(c);
-		result.addAll(findHull(c, b, S2));
-		return result;
-	}
+        result.add(mins.get(0));
+        result.addAll(findHull(mins.get(0), maxs.get(0), S1));
+        result.add(maxs.get(0));
+        result.add(maxs.get(maxs.size() - 1));
+        result.addAll(findHull(maxs.get(maxs.size() - 1), mins.get(mins.size() - 1), S2));
+        result.add(mins.get(mins.size() - 1));
+        // draw lines
+        drawConvexHull(result);
+    }
 
-	public static double calculate_distance(int x1, int y1, int x2, int y2, int x0, int y0) {
-		return Math.abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1)
-				/ Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
-	}
+    public boolean isRight(Point a, Point b, Point c) {
+        return ((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)) > 0;
+    }
 
-	public boolean isInside(int x, int y, int x1, int y1, int x2, int y2, int x3, int y3) {
-		float p1 = (x - x1) * (y3 - y1) - (x3 - x1) * (y - y1), p2 = (x - x2) * (y1 - y2) - (x1 - x2) * (y - y2),
-				p3 = (x - x3) * (y2 - y3) - (x2 - x3) * (y - y3);
-		return (p1 > 0 && p2 > 0 && p3 > 0) || (p1 < 0 && p2 < 0 && p3 < 0);
-	}
+    // find hull
+    private ArrayList<Point> findHull(Point a, Point b, ArrayList<Point> points) {
+        ArrayList<Point> result = new ArrayList<>();
+        ArrayList<Point> S1 = new ArrayList<>();
+        ArrayList<Point> S2 = new ArrayList<>();
 
-	private void sortGrahamScan(ArrayList<Point> points) {
+        if (points.size() == 0) {
+            return result;
+        }
 
-		points.sort(Comparator.comparing(Point::getY).reversed().thenComparing(Point::getX));
+        // find center of ab line
+        int furthestid = 0;
+        double furthestdis = 0;
 
-		Point startPoint = (Point) points.get(0).clone();
+        // calculate distance
+        for (int c = 0; c < points.size(); c++) {
+            if (calculate_distance(a.x, a.y, b.x, b.y, points.get(c).x, points.get(c).y) > furthestdis) {
+                furthestid = c;
+                furthestdis = calculate_distance(a.x, a.y, b.x, b.y, points.get(c).x, points.get(c).y);
+            }
+        }
+        Point c = points.get(furthestid);
+        points.remove(c);
+        // inside points
+        points.removeIf(p -> isInside(p.x, p.y, a.x, a.y, b.x, b.y, c.x, c.y));
 
-		points.remove(0);
+        for (Point p : points) {
+            if (isRight(a, c, p)) {
+                S1.add(p);
+            } else {
+                S2.add(p);
+            }
+        }
 
-		points.sort(Comparator.comparing(
-				x -> Math.toDegrees(Math.atan2(x.getY() - startPoint.getY(), x.getX() - startPoint.getX()))));
+        result.addAll(findHull(a, c, S1));
+        result.add(c);
+        result.addAll(findHull(c, b, S2));
+        return result;
+    }
 
-		Collections.reverse(points);
+    public static double calculate_distance(int x1, int y1, int x2, int y2, int x0, int y0) {
+        return Math.abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1)
+                / Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
+    }
 
-		points.add(startPoint);
+    public boolean isInside(int x, int y, int x1, int y1, int x2, int y2, int x3, int y3) {
+        float p1 = (x - x1) * (y3 - y1) - (x3 - x1) * (y - y1), p2 = (x - x2) * (y1 - y2) - (x1 - x2) * (y - y2),
+                p3 = (x - x3) * (y2 - y3) - (x2 - x3) * (y - y3);
+        return (p1 > 0 && p2 > 0 && p3 > 0) || (p1 < 0 && p2 < 0 && p3 < 0);
+    }
 
-	}
+    private void sortGrahamScan(ArrayList<Point> points) {
 
-	@Override
-	public void paintComponent(Graphics g) {
+        points.sort(Comparator.comparing(Point::getY).reversed().thenComparing(Point::getX));
 
-		super.paintComponent(g);
-		doDrawing(g);
-	}
+        Point startPoint = (Point) points.get(0).clone();
 
-	public void clear() {
-		this.points.clear();
-		repaint();
+        points.remove(0);
 
-	}
+        points.sort(Comparator.comparing(
+                x -> Math.toDegrees(Math.atan2(x.getY() - startPoint.getY(), x.getX() - startPoint.getX()))));
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		points.add(e.getPoint());
-		repaint();
-	}
+        Collections.reverse(points);
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+        points.add(startPoint);
 
-	}
+    }
 
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+    @Override
+    public void paintComponent(Graphics g) {
 
-	}
+        super.paintComponent(g);
+        doDrawing(g);
+    }
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+    public void clear() {
+        this.points.clear();
+        repaint();
 
-	}
+    }
 
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        points.add(e.getPoint());
+        repaint();
+    }
 
-	}
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // TODO Auto-generated method stub
+
+    }
 
 }
